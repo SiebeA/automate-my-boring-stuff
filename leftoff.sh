@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# this script is in production here:
+# /bin/leftoff
+
 # This script let the user show where he left off with his last projects;
 #    it colours the filepath and filerooth
 #    it opens the root folder of the project in the filemanager IF the user wants to
@@ -16,18 +19,24 @@ else
     echo '(you can edit the text file with the argument "-e" or "--edit")'
     # read the content of the text file: ~/leftoff.txt and store it in $text
     text=$(cat ~/leftoff.txt)
-    # use a regex to extract the text after the last r'/'
-    filename=${text##*/} # extract the text after the last r'/'
-    file_root=${text%/*} # extract the text before the last r'/'
-    # remove the newline character from the end of the string
-    file_root=${file_root%$'\n'}
 
 
-    # append the filename to the file_root
-    absolute_path=$file_root/$filename
+#===============================================================
+# colouring                 #
+#%===============================================================
 
-    # append and  colour the file_root in green and the filename in red and echo it
-    echo -e "\e[32m$file_root\e[0m/\e[31m$filename\e[0m"
+    # capture the first line of the text file
+    firstline=$(echo "$text" | head -n 1)
+    # echo the first line of the text file in red
+    echo -e "\e[31m$firstline\e[0m"
+
+    # capture text that is in "**"
+    bold=$(echo "$text" | grep -o "\*\*.*\*\*")
+    # echo the bold text in bold
+    echo -e "\e[1m$bold\e[0m"
+
+
+
     echo
     echo "Here is a list of the files in the folder; with the lower files being the most recently updated:"
     echo
