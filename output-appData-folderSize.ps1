@@ -2,6 +2,8 @@
 # this script outputs the size of all folders in the AppData folder
 
 $sourcePath = "C:\Users\Siebe\AppData\Roaming"
+# $sourcePath = "C:\Users\Siebe\AppData\Roaming\Adobe"
+# $sourcePath = "C:\Users\Siebe\AppData\Roaming\Adobe\Common"
 
 $folders = Get-ChildItem -Path $sourcePath -Directory
 
