@@ -23,4 +23,5 @@ foreach ($folder in $sortedFolders) {
     Write-Host
 }
 
-echo '`n    this was for $sourcePath `n '
+# echo the source path
+Write-Host "Source Path: $sourcePath"
