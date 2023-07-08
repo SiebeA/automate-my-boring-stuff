@@ -4,10 +4,16 @@ def sort_lines_by_word_length(filename):
     The lines are sorted in ascending order.
     The sorted lines are written to a new text file.
 
-    input: text file with lines of text
-    output: text file with sorted lines of text
+    input: .txt file
+    output: .txt file with sorted lines
+
+    # run it from the command line:
+    python sort-lines-by-word-length.py
+
+    # application areas:
+    - I want to order all my text highlights from a book by their length
     """
-    with open(filename, 'r') as file:
+    with open(filename, 'r', encoding='utf-8') as file:
         lines = file.readlines()
         # remove empty lines:
         lines = [line for line in lines if line.strip()]
@@ -24,10 +30,6 @@ def sort_lines_by_word_length(filename):
             file.write('\n')
 
 if __name__ == '__main__':
-    import sys
-    filename = sys.argv[1]
-    # filename = 'example.txt'
-    sort_lines_by_word_length(filename)
-
-# run it in the command line like this:
-# python sort-lines-by-word-length.py example.txt
+    # ask for input file
+    input_file = input('Enter the path of the file you want to sort: ')
+    sort_lines_by_word_length(input_file)

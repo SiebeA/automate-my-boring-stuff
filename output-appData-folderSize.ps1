@@ -1,3 +1,13 @@
+<#
+.SYNOPSIS
+this script will output the size of all folders in the appdata folder with greatest values at first terminal sight
+the function does not take any parameters
+#>
+function Get-CurrentDateTime {
+    # Function logic goes here
+}
+
+
 $sourcePath = "C:\Users\Siebe\AppData\Roaming"
 
 $folders = Get-ChildItem -Path $sourcePath -Directory
