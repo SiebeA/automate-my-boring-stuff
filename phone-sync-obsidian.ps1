@@ -7,6 +7,10 @@ Write-Host "2. Pull files from phone to PC"
 $syncOption = Read-Host "Enter the option number (1/2)"
 
 adb connect 192.168.2.30
+# if this fails try this: adb connect 192.168.2.30:37943 # Look for "wireless debugging" on phone setting
+
+
+
 adb start-server
 Write-Host "The phone is now connected to the computer."
 
@@ -63,3 +67,5 @@ if ($syncOption -eq "1") {
     Write-Host "Invalid option selected. Exiting."
     exit
 }
+
+TODO after pushing listing files first ask whether to continue
