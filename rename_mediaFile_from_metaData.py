@@ -48,7 +48,7 @@ def text2int(textnum, numwords={}):
 #     main    
 # ==================================
 # Set the path to the video file
-video_folder = "C://Users//Siebe//Phone_sync//podcast//The Age of Napoleon Podcast"
+video_folder = r'C:\Users\Siebe\Desktop\Audiobooks\.Audiobook\podcast\The Age of Napoleon Podcast'
 
 # Loop through all the files in the folder
 for filename in os.listdir(video_folder):
@@ -69,6 +69,7 @@ for filename in os.listdir(video_folder):
         # Get the media creation date from the metadata
         # create_date = metadata.get("creation_date") # outputs dates that are all the same
         title = metadata.get("title")
+        print(title)
         # if create_date:
         #     create_date_str = create_date.strftime("%Y-%m-%d %H:%M:%S")
         #     create_datetime = datetime.datetime.strptime(create_date_str, "%Y-%m-%d %H:%M:%S")
@@ -85,6 +86,8 @@ for filename in os.listdir(video_folder):
         valid_title = valid_title.lower().replace("episode", "")
         # strip leading and trailing whitespace
         valid_title = valid_title.strip()
+        # replace spaces for underscores
+        valid_title = valid_title.replace(" ", "_")
 
         # new_filename = f"{create_date_formatted}_{valid_title}.mp3" # outputs dates that are all the same
         new_filename = f"{valid_title}.mp3"
@@ -93,3 +96,6 @@ for filename in os.listdir(video_folder):
         # else:
         #     print(f"{filename}: Media creation date not found.")
 
+# list the new names
+for filename in os.listdir(video_folder):
+    print(filename)
