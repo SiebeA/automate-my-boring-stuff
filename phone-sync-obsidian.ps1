@@ -1,12 +1,12 @@
 # this script is used to sync my phone with my computer
 
-"""
-Note that
-'sdcard' is the internal storage
-'/storage/C1B2-0FF3/' is the external storage
+# """
+# Note that
+# 'sdcard' is the internal storage
+# '/storage/C1B2-0FF3/' is the external storage
 
-and adb uses backward slashes for paths
-"""
+# and adb uses backward slashes for paths
+# """
 
 # Determine the path for the PC folder and the Obsidian path
 $obsidianPath = "/sdcard/Documents/Obsidian/"
@@ -47,6 +47,14 @@ if ($syncOption -eq "1") {
     Write-Host "you've chosen to push files to your phone"
     # Push files from PC to phone
     # ==================================
+
+    #  check if the folder already exists
+    if (Test-Path $pc_folder) {
+        Write-Host "The folder already exists."
+    } else {
+        Write-Host "The folder does not exist. Creating it now."
+        New-Item -Path $pc_folder -ItemType Directory
+    }
 
     # List the .md files in the PC folder
     $mdFiles = Get-ChildItem -Path $pc_folder -Filter "*.md"
