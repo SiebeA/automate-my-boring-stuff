@@ -42,7 +42,7 @@ for line in soup.get_text().split('\n'):
             for i, dialogue_line in enumerate(dialogue_accumulator):
                 if i % 2 == 0 and i > 0:
                     formatted_dialogue += '<br/>\n\t\t\t'
-                formatted_dialogue += dialogue_line
+                formatted_dialogue += dialogue_line.strip() + ' <br/>'
             formatted_line = f'<tr class="first-child1">\n\t<td epub:type="z3998:persona" class="epub-type-z3998-persona1"><b>{speaker}</b></td>\n\t<td class="epub-type-z3998-verse">\n\t\t<p class="first-child3">\n\t\t\t<span class="calibre19">{formatted_dialogue}</span>\n\t\t</p>\n\t</td>\n</tr>'
             formatted_lines.append(formatted_line)
         speaker, dialogue = re.split(r':\s+', line, maxsplit=1)
@@ -58,7 +58,7 @@ if speaker and dialogue_accumulator:
     for i, dialogue_line in enumerate(dialogue_accumulator):
         if i % 2 == 0 and i > 0:
             formatted_dialogue += '<br/>\n\t\t\t'
-        formatted_dialogue += dialogue_line
+        formatted_dialogue += dialogue_line.strip() + ' <br/>'
     formatted_line = f'<tr class="first-child1">\n\t<td epub:type="z3998:persona" class="epub-type-z3998-persona1"></td>\n\t<td class="epub-type-z3998-verse">\n\t\t<p class="first-child3">\n\t\t\t<span class="calibre19">{formatted_dialogue}</span>\n\t\t</p>\n\t</td>\n</tr>'
     formatted_lines.append(formatted_line)
 
@@ -71,3 +71,5 @@ final_output = f'<table class="calibre17">\n\t<tbody class="calibre18">\n{output
 # Write final output to a text file
 with open("output.txt", "w") as file:
     file.write(final_output)
+
+print("HTML output saved to output.txt")
