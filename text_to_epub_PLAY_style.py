@@ -3,22 +3,30 @@ import re
 
 def create_ebook_html(text):
     lines = text.split('\n')
+    lines = [line.strip() for line in text.split('\n') if line.strip()]
+
     html = '<body class="calibre5">\n\n'
     current_speaker = None
 
-    for line in lines:
-        line = line.strip()
-        if not line:
+    for i in range(0, len(lines), 2):
+        spanish_line = lines[i].strip()
+        
+        # Check if there's an English translation available
+        if i + 1 < len(lines):
+            english_line = lines[i + 1].strip()
+        else:
+            english_line = ''
+
+        if not spanish_line:
             continue
 
-        if ":" in line:
-            speaker, dialogue = line.split(":", 1)
+        if ":" in spanish_line:
+            speaker, spanish_dialogue = spanish_line.split(":", 1)
             speaker = speaker.strip()
-            dialogue = dialogue.strip()
+            spanish_dialogue = spanish_dialogue.strip()
         else:
-            # If no colon is found, assume the entire line is dialogue
             speaker = current_speaker
-            dialogue = line.strip()
+            spanish_dialogue = spanish_line.strip()
 
         if speaker != current_speaker:
             if current_speaker:
@@ -31,11 +39,14 @@ def create_ebook_html(text):
         html += '  <td class="calibre14">\n'
         html += '    <p class="hanginga">           </p>\n'
         html += '  </td>\n'
-        html += f'  <td class="calibre15">\n    <p class="hanging">{dialogue}</p>\n  </td>\n'
+        html += '  <td class="calibre15">\n'
+        html += f'    <p class="hanging">{spanish_dialogue}<br/>{english_line}</p>\n'
+        html += '  </td>\n'
         html += '</tr>\n'
 
     html += '</table>\n</body>'
     return html
+
 
 # Specify the path to the input text file
 input_file_path = r'C:\Users\Siebe\Desktop\Spanish Subtitles to book\Krishnamurti\input.txt'
