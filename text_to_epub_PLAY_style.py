@@ -1,66 +1,75 @@
 from bs4 import BeautifulSoup
-import re
 
-def create_ebook_html(text):
-    lines = text.split('\n')
-    lines = [line.strip() for line in text.split('\n') if line.strip()]
+def convert_gorgias_to_caesar_format(input_html_path, output_html_path):
+    # Read the input HTML file
+    with open(input_html_path, 'r', encoding='utf-8') as file:
+        content = file.read()
 
-    html = '<body class="calibre5">\n\n'
-    current_speaker = None
+    # Parse the HTML content
+    soup = BeautifulSoup(content, 'html.parser')
 
-    for i in range(0, len(lines), 2):
-        spanish_line = lines[i].strip()
-        
-        # Check if there's an English translation available
-        if i + 1 < len(lines):
-            english_line = lines[i + 1].strip()
+    # Create a new BeautifulSoup object for the output
+    new_soup = BeautifulSoup('<html><head></head><body></body></html>', 'html.parser')
+
+    # Copy the head content
+    new_soup.head.append(new_soup.new_tag('meta', charset='utf-8'))
+    new_soup.head.append(new_soup.new_tag('title'))
+    new_soup.title.string = soup.title.string
+
+    # Add the CSS for formatting
+    style_tag = new_soup.new_tag('style')
+    style_tag.string = """
+    .dialogue {
+      display: table;
+      width: 100%;
+      margin-bottom: 10px;
+    }
+    .character {
+      display: table-cell;
+      width: 20%;
+      font-weight: bold;
+      vertical-align: top;
+    }
+    .speech {
+      display: table-cell;
+      width: 80%;
+      padding-left: 10px;
+    }
+    """
+    new_soup.head.append(style_tag)
+
+    # Copy the body content
+    new_soup.body.append(soup.h2)
+    new_soup.body.append(soup.find('p', class_='p18'))
+    new_soup.body.append(soup.find_all('p', class_='p18')[1])
+    new_soup.body.append(soup.find('p', class_='p19'))
+
+    # Process each paragraph in the original HTML
+    for p in soup.find_all('p'):
+        if ':' in p.text:
+            character, speech = p.text.split(':', 1)
+            dialogue_div = new_soup.new_tag('div', **{'class': 'dialogue'})
+            character_div = new_soup.new_tag('div', **{'class': 'character'})
+            character_div.string = character + ":"
+            speech_div = new_soup.new_tag('div', **{'class': 'speech'})
+            speech_div.string = speech.strip()
+            dialogue_div.append(character_div)
+            dialogue_div.append(speech_div)
+            new_soup.body.append(dialogue_div)
         else:
-            english_line = ''
+            new_p = new_soup.new_tag('p')
+            new_p.string = p.text
+            new_soup.body.append(new_p)
 
-        if not spanish_line:
-            continue
+    # Write the output HTML file
+    with open(output_html_path, 'w', encoding='utf-8') as file:
+        file.write(new_soup.prettify())
 
-        if ":" in spanish_line:
-            speaker, spanish_dialogue = spanish_line.split(":", 1)
-            speaker = speaker.strip()
-            spanish_dialogue = spanish_dialogue.strip()
-        else:
-            speaker = current_speaker
-            spanish_dialogue = spanish_line.strip()
+# Paths to the input and output HTML files
+input_html_path = r"C:\Users\Siebe\Desktop\temp\text00069 gorgias.html"
+output_html_path = r"C:\Users\Siebe\Desktop\temp\output.html"
 
-        if speaker != current_speaker:
-            if current_speaker:
-                html += '</table>\n\n'
-            html += f'<h3 class="h">{speaker}</h3>\n\n'
-            html += '<table border="0" cellpadding="0" cellspacing="0" class="calibre12">\n'
-            current_speaker = speaker
+# Convert the HTML file
+convert_gorgias_to_caesar_format(input_html_path, output_html_path)
 
-        html += '<tr class="calibre13">\n'
-        html += '  <td class="calibre14">\n'
-        html += '    <p class="hanginga">           </p>\n'
-        html += '  </td>\n'
-        html += '  <td class="calibre15">\n'
-        html += f'    <p class="hanging">{spanish_dialogue}<br/>{english_line}</p>\n'
-        html += '  </td>\n'
-        html += '</tr>\n'
-
-    html += '</table>\n</body>'
-    return html
-
-
-# Specify the path to the input text file
-input_file_path = r'C:\Users\Siebe\Desktop\Spanish Subtitles to book\Krishnamurti\input.txt'
-
-# Open the input text file and read its contents
-with open(input_file_path, 'r', encoding='utf-8') as input_file:
-    input_text = input_file.read()
-
-
-html_output = create_ebook_html(input_text)
-
-# Write final HTML output to a text file
-output_file_path = "output.txt"
-with open(output_file_path, "w", encoding='utf-8') as output_file:
-    output_file.write(html_output)
-
-print("HTML output saved to output.txt")
+output_html_path
